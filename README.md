@@ -1,13 +1,13 @@
 # ChIP-Seq Peakcalling Benchmarking
    
 
-##1. PeakRanger (BCP)
-#####Description:
+##1. PeakRanger (BCP)   
+#####Description:  
 PeakRanger is a multi-purporse software suite for analyzing next-generation sequencing (NGS) data. 
 It contains the BCP tool for broad peak calling. BCP supports HTML-based annotation reports. 
 BCP is installed on[Biowulf.](https://hpc.nih.gov/apps/peakranger.html) 
 
-#####Loading PeakRanger on Biowulf:
+#####Loading PeakRanger on Biowulf:  
 
     module load peakranger
  

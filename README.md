@@ -1,17 +1,17 @@
 # ChIP-Seq Peakcalling Benchmarking
    
 
-##1. PeakRanger (BCP)   
-#####Description:  
+## 1. PeakRanger (BCP)   
+##### Description:  
 PeakRanger is a multi-purporse software suite for analyzing next-generation sequencing (NGS) data. 
 It contains the BCP tool for broad peak calling. BCP supports HTML-based annotation reports. 
 BCP is installed on[Biowulf.](https://hpc.nih.gov/apps/peakranger.html) 
 
-#####Loading PeakRanger on Biowulf:  
+##### Loading PeakRanger on Biowulf:  
 
     module load peakranger
  
-#####Running BCP:  
+##### Running BCP:  
 
     peakranger bcp \
     --data {expt1.bam} \
@@ -20,20 +20,20 @@ BCP is installed on[Biowulf.](https://hpc.nih.gov/apps/peakranger.html)
     --output bcp_results
 
 
-##2. MAC2 
-#####Description:
+## 2. MAC2 
+##### Description:
 MACS empirically models the length of the sequenced ChIP fragments, which tends to be shorter than sonication or library 
 construction size estimates, and uses it to improve the spatial resolution of predicted binding sites. MACS also uses a 
 dynamic Poisson distribution to effectively capture local biases in the genome sequence, allowing for more sensitive and 
 robust prediction. MACS compares favorably to existing ChIP-Seq peak-finding algorithms and can be used for ChIP-Seq with 
 or without control samples.MAC2 is installed on[Biowulf.](https://hpc.nih.gov/apps/macs.html)  
 
-#####Loading MACs on Biowulf:
+##### Loading MACs on Biowulf:
 
     module load macs
 
 
-#####Running MAC2:  
+##### Running MAC2:  
 
     macs2 callpeak \
     -t {input1.bam} \
@@ -47,13 +47,13 @@ or without control samples.MAC2 is installed on[Biowulf.](https://hpc.nih.gov/ap
 
 
 
-##3. SISSRS
-#####Description: 
+## 3. SISSRS
+##### Description: 
 SISSRs is a software application for precise identification of genome-wide transcription factor binding
 sites from ChIP-Seq data. SISSCRS is currently not installed Biowulf, but more information-- including installation details-- 
 can be found on it's[homepage.](https://dir.nhlbi.nih.gov/papers/lmi/epigenomes/sissrs/SISSRs-Manual.pdf)
 
-#####Running SISSRS:  
+##### Running SISSRS:  
 
      sissrs.pl \
      -i {input-file.bed} \
@@ -61,16 +61,16 @@ can be found on it's[homepage.](https://dir.nhlbi.nih.gov/papers/lmi/epigenomes/
      -s {genome-size}
    * {genome-size} is the effective genome size (or length): e.g. 3080436051 for hg18
 
-##4. GEM 
-#####Description: 
+## 4. GEM 
+##### Description: 
 GEM is a high-resolution peak calling and motif discovery tool for ChIP-seq and ChIP-exo data. 
 GEM is installed on[Biowulf.](https://hpc.nih.gov/apps/gem.html)
 
-#####Loading GEM on Biowulf:
+##### Loading GEM on Biowulf:
 
     module load gem
 
-#####Running GEM:  
+##### Running GEM:  
 
     java -Xmx10g -jar $GEMJAR --t 24 \
     --d ./Read_Distribution_default.txt \
@@ -83,17 +83,17 @@ GEM is installed on[Biowulf.](https://hpc.nih.gov/apps/gem.html)
     --out mouseCTCF --k_min 6 --k_max 13
 
 
-##5. MUSIC
-#####Description: 
+## 5. MUSIC
+##### Description: 
 MUSIC is a tool for identification of enriched regions at multiple scales in the read depth signals from ChIP-Seq experiments. 
 MUSIC is installed on[Biowulf.](https://hpc.nih.gov/apps/music.html)
 
-#####Loading Music on Biowulf:
+##### Loading Music on Biowulf:
 
     module load samtools  # needed to convert to sam format
     module load music
 
-#####Running Music:
+##### Running Music:
     mkdir chip; mkdir input
     samtools view chip.bam | MUSIC -preprocess SAM stdin chip/ 
     samtools view input.bam | MUSIC -preprocess SAM stdin input/
@@ -117,8 +117,8 @@ MUSIC is installed on[Biowulf.](https://hpc.nih.gov/apps/music.html)
    multiplicative factor of 1.5 using the default parameters for the remaining parameters. The ERs for each scale are dumped.
     
 
-##6. PePr
-#####Description:
+## 6. PePr
+##### Description:
 PePr is a ChIP-Seq Peak-calling and Prioritization pipeline that uses a sliding window approach and models read counts 
 across replicates and between groups with a negative binomial distribution. PePr empirically estimates the optimal 
 shift/fragment size and sliding window width, and estimates dispersion from the local genomic area. Regions with less 
@@ -126,10 +126,10 @@ variability across replicates are ranked more favorably than regions with greate
 steps are also made available to filter out peaks not exhibiting the expected shift size and/or to narrow the width of peaks. 
 PePr is installed on[Biowulf.](https://hpc.nih.gov/apps/PePr.html)
 
-#####Loading PePr on Biowulf:  
+##### Loading PePr on Biowulf:  
     module load PePr
 
-#####Running Pepr:
+##### Running Pepr:
     PePr -c chip_rep1.bam,chip_rep2.bam \
     -i input_rep1.bam,input_rep2.bam \
     -f bam \

@@ -1,0 +1,164 @@
+##########################################################################################################
+# Benchmarking of ChIP-Seq peak Callers
+# Author: Skyler Kuhn (NIH/NCI) [C]
+# CCR Collaborative Bioinformatics Resource
+# Version 1.0.0
+# See README.MD for more information
+# USAGE:
+#   snakemake Snakefile
+##########################################################################################################
+
+import sys
+
+shell.prefix("set -eo pipefail; ")
+
+configfile: "config.yaml"
+localrules: all, index_bam, flagstat_bam
+
+controls = config["controls"]
+if controls is None:
+    sys.exit("Controls are needed")
+
+samples_narrow = config["samples_narrow"]
+if samples_narrow is None:
+    samples_narrow = []
+
+samples_broad = config["samples_broad"]
+if samples_broad is None:
+    samples_broad = []
+
+ALL_SAMPLES = samples_narrow + samples_broad + controls
+
+ALL_BAM = expand("03aln/{sample}.sorted.bam", sample = ALL_SAMPLES)
+ALL_BAM.extend(expand("03aln/{sample}.sorted.bam.bai", sample = ALL_SAMPLES)
+ALL_BAM.extend("03aln/{sample}.sorted.bam.flagstat", sample = ALL_SAMPLES)
+ALL_BAM.extend(("03aln/control.sorted.bam",
+                "03aln/control.sorted.bam.bai",
+                "03aln/control.sorted.bam.flagstat"))
+
+ALL_FASTQC  = expand("02fqc/{sample}_fastqc.zip", sample = ALL_SAMPLES)
+
+ALL_PEAKS = expand("04peak/{sample}_peaks.narrowPeak", sample = samples_narrow) + \
+            expand("04peak/{sample}_peaks.broadPeak", sample = samples_broad)
+
+rule all:
+    input: ALL_FASTQC + ALL_BAM + ALL_PEAKS
+
+rule fastqc:
+    input:  "01seq/{sample}.fastq.gz", "fastqc_limits.txt"
+    output: "02fqc/{sample}_fastqc.zip", "02fqc/{sample}_fastqc.html"
+    threads: 2
+    shell:
+        """
+        module load fastqc
+        fastqc -o 02fqc -d /lscratch/$SLURM_JOBID -f fastq --noextract --limits {input[1]} {input[0]}
+        """
+
+rule clean_fastq:
+    input:   "01seq/{sample}.fastq.gz"
+    output:  temp("01seq/{sample}.clean.fastq.gz")
+    log:     "00log/{sample}.clean_fastq"
+    threads: 4
+    shell:
+        """
+        module load fastxtoolkit
+        zcat {input} \
+        | tr '.' 'N' \
+        | fastx_artifacts_filter -v 2> {log}.1 \
+        | fastx_clipper -a AGATCGGAAGAGC -v 2> {log}.2 \
+        | fastq_quality_trimmer -t 20 -v -l 10 -z 2> {log}.3 \
+        > {output}
+        echo "artefact filter" > {log}
+        cat {log}.1 >> {log}
+        echo -e "clipper" >> {log}
+        cat {log}.2 >> {log}
+        echo -e "trimmer" >> {log}
+        cat {log}.3 >> {log}
+        rm {log}.1 {log}.2 {log}.3
+        """
+
+rule align:
+    input:  "01seq/{sample}.clean.fastq.gz"
+    output: "03aln/{sample}.sorted.bam"
+    threads: 10
+    params:
+        bowtie = "--phred33-quals --sam --best --strata --all -m1 -n2 -l50",
+    log: "00log/{sample}.align"
+    shell:
+        """
+        module load bowtie/1.1.1 samtools/1.3.1
+        bt_threads=$(({threads} - 2))
+        tmpdir="/lscratch/$SLURM_JOB_ID"
+        gunzip -c {input} \
+            | bowtie {params.bowtie} --threads=$bt_threads {config[idx_bt1]} - 2> {log} \
+            | samtools view -Su -F4 - \
+            | samtools sort -m 2G -@ 2 -O bam -T ${{tmpdir}}/{wildcards.sample} -o {output}
+        """
+
+rule index_bam:
+    input: "03aln/{sample}.sorted.bam"
+    output: "03aln/{sample}.sorted.bam.bai"
+    threads: 1
+    shell:
+        """
+        module load samtools
+        samtools index {input}
+        """
+
+rule flagstat_bam:
+    input: "03aln/{sample}.sorted.bam"
+    output: "03aln/{sample}.sorted.bam.flagstat"
+    threads: 1
+    shell:
+        """
+        module load samtools
+        samtools flagstat {input} > {output}
+        """
+
+rule merge_controls:
+    input:   expand("03aln/{sample}.sorted.bam", sample = controls)
+    output:  "03aln/control.sorted.bam"
+    log:     "00log/merge_controls"
+    threads: 2
+    shell:
+        """
+        inbam=( {input} )
+        if [[ ${{#inbam[@]}} -eq 1 ]]; then
+            ln -s $(cd $(dirname {input}) && pwd)/$(basename {input}) {output}
+        else
+            module load samtools/1.2
+            samtools merge -r -@{threads} {output} {input}
+        fi
+        """
+
+
+rule find_narrow_peaks:
+    input:  "03aln/{sample}.sorted.bam",
+            "03aln/control.sorted.bam"
+    output: "04peak/{sample}_model.r", "04peak/{sample}_peaks.narrowPeak",
+            "04peak/{sample}_peaks.xls", "04peak/{sample}_summits.bed",
+            "04peak/{sample}_model.pdf"
+    log:    "00log/{sample}.find_narrow_peaks"
+    threads: 2
+    shell:
+        """
+        module load macs/2.1.0.20150420 R
+        macs2 callpeak -t {input[0]} \
+                -c {input[1]} -f BAM -g {config[macs_g]} \
+                --outdir 04peak -n {wildcards.sample} -q 0.001 &> {log}
+        cd 04peak && Rscript {wildcards.sample}_model.r
+        """
+
+rule find_broad_peaks:
+    input:  "03aln/{sample}.sorted.bam", "03aln/control.sorted.bam"
+    output: "04peak/{sample}_peaks.xls", "04peak/{sample}_peaks.broadPeak"
+    log:    "00log/{sample}.find_broad_peaks"
+    threads: 2
+    shell:
+        """
+        module load macs/2.1.0.20150420
+        macs2 callpeak -t {input[0]} \
+                -c {input[1]} -f BAM -g {config[macs_g]} \
+                --broad --broad-cutoff 0.1 --nomodel --extsize 150 \
+                --outdir 04peak -n {wildcards.sample} -q 0.001 &> {log}
+        """

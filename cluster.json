@@ -1,0 +1,27 @@
+{
+    "__default__" :
+    {
+        "time" : "01:00:00",
+        "partition" : "quick",
+        "mem"  : "2g",
+        "extra": "",
+        "out"  : "00log/{rule}_{wildcards.sample}-%j.out"
+    },
+    "fastqc" :
+    {
+        "mem": "600m",
+        "time": "20",
+        "extra": "--gres=lscratch:10"
+    },
+    "clean_fastq" : { "time": "30" },
+    "align" :
+    {
+        "mem": "12g",
+        "time": "2:00:00",
+        "extra": "--gres=lscratch:20"
+    },
+    "merge_controls" : {"out"  : "00log/{rule}-%j.out"},
+    "find_narrow_peaks" : { "time": "30" },
+    "find_broad_peaks" : { "time": "30" }
+}
+

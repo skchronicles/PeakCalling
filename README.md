@@ -5,7 +5,7 @@
 ##### Description:  
 PeakRanger is a multi-purporse software suite for analyzing next-generation sequencing (NGS) data. 
 It contains the BCP tool for broad peak calling. BCP supports HTML-based annotation reports. 
-BCP is installed on[Biowulf.](https://hpc.nih.gov/apps/peakranger.html) 
+BCP is installed on [Biowulf.](https://hpc.nih.gov/apps/peakranger.html) 
 
 ##### Loading PeakRanger on Biowulf:  
 
@@ -26,7 +26,7 @@ MACS empirically models the length of the sequenced ChIP fragments, which tends 
 construction size estimates, and uses it to improve the spatial resolution of predicted binding sites. MACS also uses a 
 dynamic Poisson distribution to effectively capture local biases in the genome sequence, allowing for more sensitive and 
 robust prediction. MACS compares favorably to existing ChIP-Seq peak-finding algorithms and can be used for ChIP-Seq with 
-or without control samples.MAC2 is installed on[Biowulf.](https://hpc.nih.gov/apps/macs.html)  
+or without control samples.MAC2 is installed on [Biowulf.](https://hpc.nih.gov/apps/macs.html)  
 
 ##### Loading MACs on Biowulf:
 
@@ -51,7 +51,7 @@ or without control samples.MAC2 is installed on[Biowulf.](https://hpc.nih.gov/ap
 ##### Description: 
 SISSRs is a software application for precise identification of genome-wide transcription factor binding
 sites from ChIP-Seq data. SISSCRS is currently not installed Biowulf, but more information-- including installation details-- 
-can be found on it's[homepage.](https://dir.nhlbi.nih.gov/papers/lmi/epigenomes/sissrs/SISSRs-Manual.pdf)
+can be found on it's [homepage.](https://dir.nhlbi.nih.gov/papers/lmi/epigenomes/sissrs/SISSRs-Manual.pdf)
 
 ##### Running SISSRS:  
 
@@ -64,7 +64,7 @@ can be found on it's[homepage.](https://dir.nhlbi.nih.gov/papers/lmi/epigenomes/
 ## 4. GEM 
 ##### Description: 
 GEM is a high-resolution peak calling and motif discovery tool for ChIP-seq and ChIP-exo data. 
-GEM is installed on[Biowulf.](https://hpc.nih.gov/apps/gem.html)
+GEM is installed on [Biowulf.](https://hpc.nih.gov/apps/gem.html)
 
 ##### Loading GEM on Biowulf:
 
@@ -86,7 +86,7 @@ GEM is installed on[Biowulf.](https://hpc.nih.gov/apps/gem.html)
 ## 5. MUSIC
 ##### Description: 
 MUSIC is a tool for identification of enriched regions at multiple scales in the read depth signals from ChIP-Seq experiments. 
-MUSIC is installed on[Biowulf.](https://hpc.nih.gov/apps/music.html)
+MUSIC is installed on [Biowulf.](https://hpc.nih.gov/apps/music.html)
 
 ##### Loading Music on Biowulf:
 
@@ -124,7 +124,7 @@ across replicates and between groups with a negative binomial distribution. PePr
 shift/fragment size and sliding window width, and estimates dispersion from the local genomic area. Regions with less 
 variability across replicates are ranked more favorably than regions with greater variability. Optional post-processing 
 steps are also made available to filter out peaks not exhibiting the expected shift size and/or to narrow the width of peaks. 
-PePr is installed on[Biowulf.](https://hpc.nih.gov/apps/PePr.html)
+PePr is installed on [Biowulf.](https://hpc.nih.gov/apps/PePr.html)
 
 ##### Loading PePr on Biowulf:  
     module load PePr

@@ -5,7 +5,7 @@
 # Version 1.0.0
 # See README.MD for more information
 # USAGE:
-#   snakemake Snakefile
+#   ./snakemake.sh
 ##########################################################################################################
 
 import sys

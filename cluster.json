@@ -3,9 +3,9 @@
     {
         "time" : "01:00:00",
         "partition" : "quick",
-        "mem"  : "2g",
+        "mem"  : "8g",
         "extra": "",
-        "out"  : "00log/{rule}_{wildcards.sample}-%j.out"
+        "out"  : "log/{rule}_{wildcards.sample}-%j.out"
     },
     "fastqc" :
     {
@@ -20,8 +20,8 @@
         "time": "2:00:00",
         "extra": "--gres=lscratch:20"
     },
-    "merge_controls" : {"out"  : "00log/{rule}-%j.out"},
-    "find_narrow_peaks" : { "time": "30" },
-    "find_broad_peaks" : { "time": "30" }
+    "merge_controls" : {"out"  : "log/{rule}-%j.out"},
+    "find_narrow_peaks" : { "time": "1:00:00" },
+    "find_broad_peaks" : { "time": "1:00:00" }
 }
 

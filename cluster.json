@@ -3,8 +3,8 @@
     {
         "time" : "01:00:00",
         "partition" : "quick",
-        "mem"  : "8g",
-        "extra": "",
+        "mem"  : "32g",
+        "extra": "--gres=lscratch:80",
         "out"  : "log/{rule}_{wildcards.sample}-%j.out"
     },
     "fastqc" :
@@ -21,7 +21,6 @@
         "extra": "--gres=lscratch:20"
     },
     "merge_controls" : {"out"  : "log/{rule}-%j.out"},
-    "find_narrow_peaks" : { "time": "1:00:00" },
-    "find_broad_peaks" : { "time": "1:00:00" }
+    "find_narrow_peaks" : { "time": "2:00:00" },
+    "find_broad_peaks" : { "time": "2:00:00" }
 }
-

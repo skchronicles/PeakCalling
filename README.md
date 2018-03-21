@@ -1,24 +1,75 @@
 # ChIP-Seq Peakcalling Benchmarking
    
 
-## 1. PeakRanger (BCP)   
+## 1. PeakRanger   
 ##### Description:  
 PeakRanger is a multi-purporse software suite for analyzing next-generation sequencing (NGS) data. 
-It contains the BCP tool for broad peak calling. BCP supports HTML-based annotation reports. 
-BCP is installed on [Biowulf.](https://hpc.nih.gov/apps/peakranger.html) 
+It contains the following tools:
+1. `nr`: a noise ratio estimator useful for QC statistics. Estimates signal to noise ratio which is an indicator for ChIP 
+enrichment.
+2. `lc`: library complexity calculator useful for QC statistics. Calculates the ratio of unique reads over total reads. 
+Only accepts bam files.
+3. `ranger`: ChIP-Seq peak caller. Ranger servers better as a narrow-peak caller. It behaves in a conservative but 
+sensitive way compared to similar algorithms. It is able to identify enriched genomic regions while at the same time 
+discover summits within these regions. 
+Ranger supports HTML-based annotation reports.
+4. `bcp`: ChIP-Seq peak caller. Tuned for the discovery of broad peaks. BCP supports HTML-based annotation reports.  
+5. `ccat`: ChIP-Seq peak caller. Tuned for the discovery of broad peaks. CCAT supports HTML-based annotation reports.
+  
+Peakranger is installed on [Biowulf.](https://hpc.nih.gov/apps/peakranger.html) 
 
 ##### Loading PeakRanger on Biowulf:  
 
     module load peakranger
- 
-##### Running BCP:  
 
-    peakranger bcp \
+##### Running NR (Noise Ratio Estimator):  
+
+    peakranger nr \
+    --format bam \
     --data {expt1.bam} \
     --control {control.bam} \
-    --format bam \
     --output bcp_results
+    
+##### Running LC (Library Complexity Calculator):  
 
+    peakranger lc \
+    --format bam \
+    {*.bam} \
+    --output bcp_results  
+
+##### Running Ranger (Narrow Peak Caller):  
+
+    peakranger ranger \
+    --format bam \
+    --report \
+    --plot_region 10000 \
+    --data {expt1.bam} \
+    --control {control.bam} \
+    --output bcp_results
+    -t 4
+ 
+##### Running BCP (Broad Peak Caller):  
+
+    peakranger bcp \
+    --format bam \
+    --report \
+    --plot_region 10000 \
+    --data {expt1.bam} \
+    --control {control.bam} \
+    --output bcp_results
+    -t 4
+
+##### Running CCAT (Broad Peak Caller):  
+
+    peakranger ccat \
+    --format bam \
+    --report \
+    --plot_region 10000 \
+    --data {expt1.bam} \
+    --control {control.bam} \
+    --output bcp_results
+    -t 4
+    
 
 ## 2. MAC2 
 ##### Description:
@@ -33,37 +84,63 @@ or without control samples.MAC2 is installed on [Biowulf.](https://hpc.nih.gov/a
     module load macs
 
 
-##### Running MAC2:  
+##### Running MAC2 (Narrow Peak Mode):  
 
-    macs2 callpeak \
-    -t {input1.bam} \
-    -c {ctrl.bam} \
-    --call-summits \
-    -f BAM \
-    -g {params.gsize} \
-    -n {wildcards.name} \
-    --outdir {macsn_dir}/{wildcards.group} \
-    -B -q 0.01
+    module load macs/2.1.0.20150420 R
+    macs2 callpeak -t {input[0]} \
+    -c {input[1]} -f BAM -g {config[macs_g]} \
+    --outdir peaks/mac2/narrow -n {wildcards.sample} \
+    --nomodel --extsize {usePhantomPeaks.Rscript} -B -q 0.01 &> {log}
+	cd peaks/mac2/narrow && Rscript {wildcards.sample}_model.r
+    
+##### Running MAC2 (Broad Peak Mode):  
+ 
+    module load macs/2.1.0.20150420
+        macs2 callpeak -t {input[0]} \
+        -c {input[1]} -f BAM -g {config[macs_g]} \
+        --broad --broad-cutoff 0.1 --nomodel --extsize {usePhantomPeaks.Rscript} \
+        --outdir peaks/mac2/broad -n {wildcards.sample} -q 0.001 &> {log}
+
+<!--- *need to use the --nomodel --extsize $extsize. get extsize by running phantompeakqualtools ...something like this > Rscript /data/CCBR_Pipeliner/3.0/Pipeliner/Results-template/Scripts/phantompeakqualtools/run_spp_nodups.R -c=$bamfile -p=${NTHREADS} -savp=${CC_PLOT} -out=${CC_SCORES}... the CC_Scores files will have the peaks, pick the first one for extsize* --->
 
 
-
-## 3. SISSRS
+## 3. SICER
 ##### Description: 
-SISSRs is a software application for precise identification of genome-wide transcription factor binding
-sites from ChIP-Seq data. SISSCRS is currently not installed Biowulf, but more information-- including installation details-- 
-can be found on it's [homepage.](https://dir.nhlbi.nih.gov/papers/lmi/epigenomes/sissrs/SISSRs-Manual.pdf)
+Sicer is a clustering approach for identification of enriched domains from histone modification ChIP-Seq data.
 
-##### Running SISSRS:  
+##### Loading SICER on Biowulf:
 
-     sissrs.pl \
-     -i {input-file.bed} \
-     -o {output-file} \
-     -s {genome-size}
-   * {genome-size} is the effective genome size (or length): e.g. 3080436051 for hg18
+    module load sicer
+
+##### Running SICER with controls:  
+
+    bash {params.SICERDIR}/SICER.sh ./ {wildcards.name}.bed {params.ctrl}.bed ./ hg18 1 300 300 0.75 600 1E-2
+Example:  sh DIR/SICER.sh ["InputDir"] ["bed file"] ["control file"] ["OutputDir"] ["Species"] ["redundancy
+threshold"] ["window size (bp)"] ["fragment size"] ["effective genome fraction"] ["gap size (bp)"]
+["FDR"]   
+
+Meanings of the parameters that are not self-explanatory: 
+   * Species: allowed species and genome versions are listed in GenomeData.py. You can add your own species and/or genome versions and relevant data there. Redundancy Threshold: The number of copies of identical reads allowed in a
+library.
+   * Window size: resolution of SICER algorithm. For histone modifications, one can use
+200 bp
+   * Fragment size: is for determination of the amount of shift from the beginning of a
+read to the center of the DNA fragment represented by the read.
+FRAGMENT_SIZE=150 means the shift is 75.
+   * Effective genome fraction: Effective Genome as fraction of the genome size. It
+depends on read length.
+   * Gap size: needs to be multiples of window size. Namely if the window size is 200,
+the gap size should be 0, 200, 400, 600, ….
+
+##### Running SICER without controls:
+    bash {params.SICERDIR}/SICER-rb.sh ./ {wildcards.name}.bed ./ hg18 1 300 300 0.75 600 100
+
+    
 
 ## 4. GEM 
 ##### Description: 
-GEM is a high-resolution peak calling and motif discovery tool for ChIP-seq and ChIP-exo data. 
+GEM is a high-resolution peak calling and motif discovery tool for ChIP-seq and ChIP-exo data. GEM only supports BED and SAM 
+alignment file formats. 
 GEM is installed on [Biowulf.](https://hpc.nih.gov/apps/gem.html)
 
 ##### Loading GEM on Biowulf:
@@ -81,7 +158,6 @@ GEM is installed on [Biowulf.](https://hpc.nih.gov/apps/gem.html)
     --ctrl SRX000543_mES_GFP.bed \
     --f BED \
     --out mouseCTCF --k_min 6 --k_max 13
-
 
 ## 5. MUSIC
 ##### Description: 
@@ -115,6 +191,8 @@ MUSIC is installed on [Biowulf.](https://hpc.nih.gov/apps/music.html)
     -step 1.5
    * This code tells MUSIC to identify the enriched regions starting from 1kb smoothing window length upto 16kb with 
    multiplicative factor of 1.5 using the default parameters for the remaining parameters. The ERs for each scale are dumped.
+   
+* You will have to generate appropriate mappability files (https://github.com/gersteinlab/MUSIC#multi-mappability-profile-generation) Our read lengths are 100 or 125, so generate for those. Also, make sure you have bowtie2 indices for the genomes. Look at https://github.com/gersteinlab/MUSIC#running-music-with-default-parameters-and-automatic-selection-of-l_p-parameter- to automate parameter selection.*
     
 
 ## 6. PePr
@@ -134,3 +212,20 @@ PePr is installed on [Biowulf.](https://hpc.nih.gov/apps/PePr.html)
     -i input_rep1.bam,input_rep2.bam \
     -f bam \
     -n {expname}
+    
+ * --shiftsize Half the fragment size.. again comes for ppqt... this should be half ext size that we used for macs
+ -f needs to be bampe for PE data...not to worry about this now --> this seems to get *
+ 
+
+## 6. DFilter
+##### Description:
+DFilter has been made to detect regulatory regions and enriched sites using tag count data. It has been made using 
+a generalized approach so that data from multiple kinds of assays can be analyzed. The raw tags files can be in 6-column 
+bed file, bedgraph, bam or sam format. For more information, read through
+DFilter's [documentation](http://collaborations.gis.a-star.edu.sg/~cmb6/kumarv1/dfilter/tutorial.html).
+
+##### Location of DFilter:  
+    /data/CCBR_Pipeliner/db/PipeDB/bin/DFilter1.6
+
+##### Running DFilter:
+    enter command

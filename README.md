@@ -254,5 +254,5 @@ DFilter's [documentation](http://collaborations.gis.a-star.edu.sg/~cmb6/kumarv1/
       run_dfilter.sh -d=Dnase-seq.bed -o=peaks.bed -ks=50 -lpval=2 -bs=100
 
 <p align="center">
-##### [Back to Top](#benchmarking-chip-seq-peak-callers)
+	<a href="#benchmarking-chip-seq-peak-callers">Back to Top</a>
 </pr>

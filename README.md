@@ -1,5 +1,13 @@
-# ChIP-Seq Peakcalling Benchmarking
-   
+# Benchmarking ChIP-Seq Peak Callers
+
+## Table of Contents
+ 1. [PeakRanger](#1.-peakranger)
+ 2. [MAC2](#2.-mac2)
+ 3. [SICER](#3.-sicer)
+ 4. [GEM](#4.-gem)
+ 5. [MUSIC](#5.-music)
+ 6. [PePr](#6.-pepr)
+ 7. [DFilter](#7.-dfilter)
 
 ## 1. PeakRanger   
 ##### Description:  
@@ -112,12 +120,25 @@ Sicer is a clustering approach for identification of enriched domains from histo
 
     module load sicer
 
-##### Running SICER with controls:  
+##### Running SICER with controls (Narrow Peaks):  
 
-    bash {params.SICERDIR}/SICER.sh ./ {wildcards.name}.bed {params.ctrl}.bed ./ hg18 1 300 300 0.75 600 1E-2
-Example:  sh DIR/SICER.sh ["InputDir"] ["bed file"] ["control file"] ["OutputDir"] ["Species"] ["redundancy
+    bash {params.SICERDIR}/SICER.sh ./ {wildcards.name}.bed {params.ctrl}.bed ./ hg18 1 100 {getfromPhantomPeaks} 0.79 200 0.01
+
+##### Running SICER with controls (Broad Peaks):  
+
+    bash {params.SICERDIR}/SICER.sh ./ {wildcards.name}.bed {params.ctrl}.bed ./ hg18 1 200 {getfromPhantomPeaks} 0.79 400 0.01
+    
+Example:  $sh DIR/SICER.sh ["InputDir"] ["bed file"] ["control file"] ["OutputDir"] ["Species"] ["redundancy
 threshold"] ["window size (bp)"] ["fragment size"] ["effective genome fraction"] ["gap size (bp)"]
 ["FDR"]   
+
+##### Running SICER without controls (Narrow Peaks):
+    bash {params.SICERDIR}/SICER-rb.sh ./ {wildcards.name}.bed ./ hg18 1 100 {getfromPhantomPeaks} 0.79 200 100
+
+##### Running SICER without controls (Broad Peaks):
+    bash {params.SICERDIR}/SICER-rb.sh ./ {wildcards.name}.bed ./ hg18 1 200 {getfromPhantomPeaks} 0.79 400 100
+Example:  $sh DIR/SICER-rb.sh ["InputDir"] ["bed file"] ["OutputDir"] ["species"] ["redundancy threshold"]
+["window size (bp)"] ["fragment size"] ["effective genome fraction"] ["gap size (bp)"] ["E-value"]
 
 Meanings of the parameters that are not self-explanatory: 
    * Species: allowed species and genome versions are listed in GenomeData.py. You can add your own species and/or genome versions and relevant data there. Redundancy Threshold: The number of copies of identical reads allowed in a
@@ -127,14 +148,9 @@ library.
    * Fragment size: is for determination of the amount of shift from the beginning of a
 read to the center of the DNA fragment represented by the read.
 FRAGMENT_SIZE=150 means the shift is 75.
-   * Effective genome fraction: Effective Genome as fraction of the genome size. It
-depends on read length.
+   * [Effective genome](https://www.nature.com/articles/nbt.1518/tables/1) fraction: Effective Genome as fraction of the genome size.
    * Gap size: needs to be multiples of window size. Namely if the window size is 200,
 the gap size should be 0, 200, 400, 600, ….
-
-##### Running SICER without controls:
-    bash {params.SICERDIR}/SICER-rb.sh ./ {wildcards.name}.bed ./ hg18 1 300 300 0.75 600 100
-
     
 
 ## 4. GEM 
@@ -158,6 +174,8 @@ GEM is installed on [Biowulf.](https://hpc.nih.gov/apps/gem.html)
     --ctrl SRX000543_mES_GFP.bed \
     --f BED \
     --out mouseCTCF --k_min 6 --k_max 13
+  * File for `--d ./Read_Distribution_default.txt` can be found [here](http://groups.csail.mit.edu/cgs/gem/download/Read_Distribution_default.txt) 
+  and files for `--g ./*.chrom.sizes` can be found [here](http://groups.csail.mit.edu/cgs/gem/versions.html)
 
 ## 5. MUSIC
 ##### Description: 
@@ -217,7 +235,7 @@ PePr is installed on [Biowulf.](https://hpc.nih.gov/apps/PePr.html)
  -f needs to be bampe for PE data...not to worry about this now --> this seems to get *
  
 
-## 6. DFilter
+## 7. DFilter
 ##### Description:
 DFilter has been made to detect regulatory regions and enriched sites using tag count data. It has been made using 
 a generalized approach so that data from multiple kinds of assays can be analyzed. The raw tags files can be in 6-column 
@@ -227,5 +245,12 @@ DFilter's [documentation](http://collaborations.gis.a-star.edu.sg/~cmb6/kumarv1/
 ##### Location of DFilter:  
     /data/CCBR_Pipeliner/db/PipeDB/bin/DFilter1.6
 
-##### Running DFilter:
-    enter command
+##### Running DFilter (Narrow Peaks):
+      run_dfilter.sh -d=ChIP.bed -c=input-control.bed -o=peaks.bed -ks=15 -lpval=6 -nonzero -refine -bs=50
+      
+##### Running DFilter (Broad Peaks):
+      run_dfilter.sh -d=ChIP.bed -c=input-control.bed -o=peaks.bed -ks=25 -lpval=3 -nonzero -bs=100
+ 
+#### Running DFilter (Open-chromatin ~ATAC-seq):
+      run_dfilter.sh -d=Dnase-seq.bed -o=peaks.bed -ks=50 -lpval=2 -bs=100
+      

@@ -1,13 +1,14 @@
 # Benchmarking ChIP-Seq Peak Callers
 
-> ## Table of Contents
-> 1. **[PeakRanger](#1-peakranger)**
-> 2. **[MAC2](#2-mac2)**
-> 3. **[SICER](#3-sicer)**
-> 4. **[GEM](#4-gem)**
-> 5. **[MUSIC](#5-music)**
-> 6. **[PePr](#6-pepr)**
-> 7. **[DFilter](#7-dfilter)**
+## Table of Contents
+1. **[PeakRanger](#1-peakranger)**
+2. **[MAC2](#2-mac2)**
+3. **[SICER](#3-sicer)**
+4. **[GEM](#4-gem)**
+5. **[MUSIC](#5-music)**
+6. **[PePr](#6-pepr)**
+7. **[DFilter](#7-dfilter)**
+<hr>
 
 ## 1. PeakRanger   
 ##### Description:  

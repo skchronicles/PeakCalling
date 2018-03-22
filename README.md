@@ -1,14 +1,13 @@
 # Benchmarking ChIP-Seq Peak Callers
 
-## Table of Contents
- 1. [PeakRanger](#1-peakranger)
- 2. [MAC2](#2-mac2)
- 3. [SICER](#3-sicer)
- 4. [GEM](#4-gem)
- 5. [MUSIC](#5-music)
- 6. [PePr](#6-pepr)
- 7. [DFilter](#7-dfilter)
-
+> ## Table of Contents
+> 1. **[PeakRanger](#1-peakranger)**
+> 2. **[MAC2](#2-mac2)**
+> 3. **[SICER](#3-sicer)**
+> 4. **[GEM](#4-gem)**
+> 5. **[MUSIC](#5-music)**
+> 6. **[PePr](#6-pepr)**
+> 7. **[DFilter](#7-dfilter)**
 
 ## 1. PeakRanger   
 ##### Description:  
@@ -213,7 +212,6 @@ MUSIC is installed on [Biowulf.](https://hpc.nih.gov/apps/music.html)
    
 * You will have to generate appropriate mappability files (https://github.com/gersteinlab/MUSIC#multi-mappability-profile-generation) Our read lengths are 100 or 125, so generate for those. Also, make sure you have bowtie2 indices for the genomes. Look at https://github.com/gersteinlab/MUSIC#running-music-with-default-parameters-and-automatic-selection-of-l_p-parameter- to automate parameter selection.*
     
-
 ## 6. PePr
 ##### Description:
 PePr is a ChIP-Seq Peak-calling and Prioritization pipeline that uses a sliding window approach and models read counts 

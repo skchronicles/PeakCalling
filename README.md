@@ -252,4 +252,5 @@ DFilter's [documentation](http://collaborations.gis.a-star.edu.sg/~cmb6/kumarv1/
  
 #### Running DFilter (Open-chromatin ~ATAC-seq):
       run_dfilter.sh -d=Dnase-seq.bed -o=peaks.bed -ks=50 -lpval=2 -bs=100
-      
+
+<center>##### [Back to Top](#benchmarking-chip-seq-peak-callers)</center>

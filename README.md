@@ -8,7 +8,6 @@
 > 5. **[MUSIC](#5-music)**
 > 6. **[PePr](#6-pepr)**
 > 7. **[DFilter](#7-dfilter)**
-<hr>
 
 ## 1. PeakRanger   
 ##### Description:  

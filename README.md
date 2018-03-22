@@ -8,6 +8,7 @@
 > 5. **[MUSIC](#5-music)**
 > 6. **[PePr](#6-pepr)**
 > 7. **[DFilter](#7-dfilter)**
+<hr>
 
 ## 1. PeakRanger   
 ##### Description:  
@@ -77,7 +78,7 @@ Peakranger is installed on [Biowulf.](https://hpc.nih.gov/apps/peakranger.html)
     --control {control.bam} \
     --output bcp_results
     -t 4
-    
+<hr>    
 
 ## 2. MAC2 
 ##### Description:
@@ -110,7 +111,7 @@ or without control samples.MAC2 is installed on [Biowulf.](https://hpc.nih.gov/a
         --outdir peaks/mac2/broad -n {wildcards.sample} -q 0.001 &> {log}
 
 <!--- *need to use the --nomodel --extsize $extsize. get extsize by running phantompeakqualtools ...something like this > Rscript /data/CCBR_Pipeliner/3.0/Pipeliner/Results-template/Scripts/phantompeakqualtools/run_spp_nodups.R -c=$bamfile -p=${NTHREADS} -savp=${CC_PLOT} -out=${CC_SCORES}... the CC_Scores files will have the peaks, pick the first one for extsize* --->
-
+<hr>
 
 ## 3. SICER
 ##### Description: 
@@ -151,7 +152,7 @@ FRAGMENT_SIZE=150 means the shift is 75.
    * [Effective genome](https://www.nature.com/articles/nbt.1518/tables/1) fraction: Effective Genome as fraction of the genome size.
    * Gap size: needs to be multiples of window size. Namely if the window size is 200,
 the gap size should be 0, 200, 400, 600, ….
-    
+<hr>
 
 ## 4. GEM 
 ##### Description: 
@@ -176,6 +177,7 @@ GEM is installed on [Biowulf.](https://hpc.nih.gov/apps/gem.html)
     --out mouseCTCF --k_min 6 --k_max 13
   * File for `--d ./Read_Distribution_default.txt` can be found [here](http://groups.csail.mit.edu/cgs/gem/download/Read_Distribution_default.txt) 
   and files for `--g ./*.chrom.sizes` can be found [here](http://groups.csail.mit.edu/cgs/gem/versions.html)
+<hr>
 
 ## 5. MUSIC
 ##### Description: 
@@ -211,7 +213,8 @@ MUSIC is installed on [Biowulf.](https://hpc.nih.gov/apps/music.html)
    multiplicative factor of 1.5 using the default parameters for the remaining parameters. The ERs for each scale are dumped.
    
 * You will have to generate appropriate mappability files (https://github.com/gersteinlab/MUSIC#multi-mappability-profile-generation) Our read lengths are 100 or 125, so generate for those. Also, make sure you have bowtie2 indices for the genomes. Look at https://github.com/gersteinlab/MUSIC#running-music-with-default-parameters-and-automatic-selection-of-l_p-parameter- to automate parameter selection.*
-    
+<hr>
+
 ## 6. PePr
 ##### Description:
 PePr is a ChIP-Seq Peak-calling and Prioritization pipeline that uses a sliding window approach and models read counts 
@@ -232,7 +235,7 @@ PePr is installed on [Biowulf.](https://hpc.nih.gov/apps/PePr.html)
     
  * --shiftsize Half the fragment size.. again comes for ppqt... this should be half ext size that we used for macs
  -f needs to be bampe for PE data...not to worry about this now --> this seems to get *
- 
+<hr> 
 
 ## 7. DFilter
 ##### Description:

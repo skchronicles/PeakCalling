@@ -99,7 +99,7 @@ rule MAC2_narrowPeaks:
         macs2 callpeak -t {input[0]} \
         -c {input[1]} -f BAM -g {config[macs_g]} \
         --outdir peaks/mac2/narrow -n {wildcards.sample} \
-        --nomodel --extsize {fragsize} -q 0.01 &> {log}
+        --nomodel --extsize {fragsize} -q 0.01 2> {log}
         cd peaks/mac2/narrow && Rscript {wildcards.sample}_model.r
         ''')
 
@@ -124,7 +124,7 @@ rule MAC2_broadPeaks:
         macs2 callpeak -t {input[0]} \
         -c {input[1]} -f BAM -g {config[macs_g]} \
         --broad --broad-cutoff 0.1 --nomodel --extsize {fragsize} \
-        --outdir peaks/mac2/broad -n {wildcards.sample} -q 0.001 &> {log}
+        --outdir peaks/mac2/broad -n {wildcards.sample} -q 0.001 2> {log}
         ''')
     
 

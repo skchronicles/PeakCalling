@@ -2,79 +2,80 @@
     "__default__" :
     {
         "time" : "06:00:00",
+        "jobname": "default",
         "partition" : "ccr",
         "mem"  : "64g",
         "extra": "--gres=lscratch:5",
         "out"  : "log/{rule}_{wildcards.sample}-%j.out"
     },
-    "sicer_broad" :
+    "merge_controls" :
     {
         "mem": "24gb",
-        "job-name": "sicerBroad",
-        "time": "5:00:00",
-        "extra": "--gres=lscratch:10"
-    },
-    "sicer_narrow" :
-    {
-        "mem": "24gb",
-        "job-name": "sicerNarrow",
-        "time": "5:00:00",
-        "extra": "--gres=lscratch:10"
-    },
-    "ccat" :
-    {
-        "mem": "12gb",
-        "job-name": "ccat",
-        "time": "5:00:00",
-        "extra": "--gres=lscratch:10"
-    },
-    "bcp" :
-    {
-        "mem": "12gb",
-        "job-name": "bcp",
-        "time": "5:00:00",
-        "extra": "--gres=lscratch:10"
-    },
-    "ranger" :
-    {
-        "mem": "12gb",
-        "job-name": "ranger",
-        "time": "5:00:00",
-        "extra": "--gres=lscratch:10"
-    },
-    "ngsqc" :
-    {
-        "mem": "80gb",
-        "job-name": "ngsqc",
-        "time": "6:00:00",
-        "extra": "--gres=lscratch:30"
-    },
-    "bams2beds" :
-    {
-        "mem": "6gb",
-        "job-name": "bams2beds",
-        "time": "4:00:00",
+        "jobname": "mergeControls",
+        "time": "2:00:00",
         "extra": "--gres=lscratch:20"
     },
     "MAC2_broadPeaks" :
     {
         "mem": "12gb",
-        "job-name": "MAC2Broad",
+        "jobname": "MAC2Broad",
         "time": "4:00:00",
         "extra": "--gres=lscratch:10"
     },
     "MAC2_narrowPeaks" :
     {
         "mem": "12gb",
-        "job-name": "MAC2Narrow",
+        "jobname": "MAC2Narrow",
         "time": "4:00:00",
         "extra": "--gres=lscratch:10"
     },
-    "merge_controls" :
+    "ccat" :
+    {
+        "mem": "12gb",
+        "jobname": "ccat",
+        "time": "5:00:00",
+        "extra": "--gres=lscratch:10"
+    },
+    "bcp" :
+    {
+        "mem": "12gb",
+        "jobname": "bcp",
+        "time": "5:00:00",
+        "extra": "--gres=lscratch:10"
+    },
+    "ranger" :
+    {
+        "mem": "12gb",
+        "jobname": "ranger",
+        "time": "5:00:00",
+        "extra": "--gres=lscratch:10"
+    },
+    "bams2beds" :
+    {
+        "mem": "6gb",
+        "jobname": "bams2beds",
+        "time": "4:00:00",
+        "extra": "--gres=lscratch:20"
+    },
+    "ngsqc" :
+    {
+        "mem": "80gb",
+        "jobname": "ngsqc",
+        "time": "6:00:00",
+        "extra": "--gres=lscratch:30"
+    },
+    "sicer_broad" :
     {
         "mem": "24gb",
-        "job-name": "mergeControls",
-        "time": "2:00:00",
-        "extra": "--gres=lscratch:20"
+        "jobname": "sicerBroad",
+        "time": "5:00:00",
+        "extra": "--gres=lscratch:10"
+    },
+    "sicer_narrow" :
+    {
+        "mem": "24gb",
+        "jobname": "sicerNarrow",
+        "time": "5:00:00",
+        "extra": "--gres=lscratch:10"
     }
 }

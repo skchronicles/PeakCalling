@@ -1,11 +1,11 @@
 ##########################################################################################################
-# ChIP-Seq Pipeline: MAC Peakcaller -> IGV snapshot
+# ChIP-Seq Pipeline: MAC parser -> IGV
 # Author: Skyler Kuhn (NIH/NCI) [C]
 # CCR Collaborative Bioinformatics Resource
 # Version 1.0.2, Excepted Release: 01/30/2017
 # See readme.txt for more information
 # USAGE:
-#   python igvSnapshots.py
+#   python ChIPSeqhChelper.py
 #    --n=5
 #    --narrowPeak_file=CHIP_Thpok_Biotin_vs_Input_Thpok_peaks.narrowPeak
 #    --treatmentBW_file=CHIP_Thpok_Biotin.R1.trim.not_blacklist_plus.sorted.mapq_gt_3.normalized.bw
@@ -49,7 +49,7 @@ def check_args(all_args):
             --treatmentBW_file
             --inputBW_file
             --output_folder\n* Invalid Input Arguments provided *
-            \nUsage:\npython igvSnapshots.py --n=5 --narrowPeak_file=narrow.narrowPeak --treatmentBW_file=treatment.bw --inputBW_file=inputfile.bw --output_folder=FolderName
+            \nUsage:\npython ChIPSeqhelper.py --n=5 --narrowPeak_file=narrow.narrowPeak --treatmentBW_file=treatment.bw --inputBW_file=inputfile.bw --output_folder=FolderName
             """
 
     if len(all_args) != 7 and len(all_args) != 13:  # maybe use an assert statement here
@@ -197,8 +197,7 @@ class ChipSeqPipeline(object):
         self.__run("echo module load igv".split(), "no")
         self.createIGVscript(self.input_bw, self.treatment_bw, self.sortedNnarrowpeaks, genome=self.genome,
                              maxPanelheight=500, padding=500, snapdirectory=self.output_folder)
-
-        #RUN THIS AFTER inserting testing.py: igv - m 20g - b igv_batch_script.txt
+	self.__run("igv -m 40g -b igv_batch_script.txt".split(), "no")
         #self.__run("echo Clean up the directory as needed-- rm any un-needed files!".split())
 
     def __str__(self):

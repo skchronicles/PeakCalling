@@ -5,6 +5,7 @@
 # Version 1.0.2, Excepted Release: 01/30/2017
 # See readme.txt for more information
 # USAGE:
+#   module load igv
 #   python igvSnapshots.py \
 #    --n=5 \
 #    --narrowPeak_file=CHIP_Thpok_Biotin_vs_Input_Thpok_peaks.narrowPeak \
@@ -49,7 +50,7 @@ def check_args(all_args):
             --treatmentBW_file
             --inputBW_file
             --output_folder\n* Invalid Input Arguments provided *
-            \nUsage:\npython ChIPSeqhelper.py --n=5 --narrowPeak_file=narrow.narrowPeak --treatmentBW_file=treatment.bw --inputBW_file=inputfile.bw --output_folder=FolderName
+            \nUsage:\npython igvSnapshots.py --n=5 --narrowPeak_file=narrow.narrowPeak --treatmentBW_file=treatment.bw --inputBW_file=inputfile.bw --output_folder=FolderName
             """
 
     if len(all_args) != 7 and len(all_args) != 13:  # maybe use an assert statement here

@@ -5,11 +5,11 @@
 # Version 1.0.2, Excepted Release: 01/30/2017
 # See readme.txt for more information
 # USAGE:
-#   python ChIPSeqhChelper.py
-#    --n=5
-#    --narrowPeak_file=CHIP_Thpok_Biotin_vs_Input_Thpok_peaks.narrowPeak
-#    --treatmentBW_file=CHIP_Thpok_Biotin.R1.trim.not_blacklist_plus.sorted.mapq_gt_3.normalized.bw
-#    --inputBW_file=Input_Thpok.R1.trim.not_blacklist_plus.sorted.mapq_gt_3.normalized.bw
+#   python igvSnapshots.py \
+#    --n=5 \
+#    --narrowPeak_file=CHIP_Thpok_Biotin_vs_Input_Thpok_peaks.narrowPeak \
+#    --treatmentBW_file=CHIP_Thpok_Biotin.R1.trim.not_blacklist_plus.sorted.mapq_gt_3.normalized.bw \
+#    --inputBW_file=Input_Thpok.R1.trim.not_blacklist_plus.sorted.mapq_gt_3.normalized.bw \
 #    --output_folder=SNAPTEST
 ##########################################################################################################
 

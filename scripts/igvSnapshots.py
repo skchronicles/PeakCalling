@@ -1,17 +1,17 @@
 ##########################################################################################################
-# ChIP-Seq Pipeline: MAC parser -> IGV
+# ChIP-Seq Pipeline: PeakCaller -> IGV
 # Author: Skyler Kuhn (NIH/NCI) [C]
 # CCR Collaborative Bioinformatics Resource
-# Version 1.0.2, Excepted Release: 01/30/2017
+# Version 1.0.3
 # See readme.txt for more information
 # USAGE:
-#   module load igv
-#   python igvSnapshots.py \
-#    --n=5 \
-#    --narrowPeak_file=CHIP_Thpok_Biotin_vs_Input_Thpok_peaks.narrowPeak \
-#    --treatmentBW_file=CHIP_Thpok_Biotin.R1.trim.not_blacklist_plus.sorted.mapq_gt_3.normalized.bw \
-#    --inputBW_file=Input_Thpok.R1.trim.not_blacklist_plus.sorted.mapq_gt_3.normalized.bw \
+#   python igvSnapshots.py
+#    --n=5
+#    --narrowPeak_file=CHIP_Thpok_Biotin_vs_Input_Thpok_peaks.narrowPeak
+#    --treatmentBW_file=CHIP_Thpok_Biotin.R1.trim.not_blacklist_plus.sorted.mapq_gt_3.normalized.bw
+#    --inputBW_file=Input_Thpok.R1.trim.not_blacklist_plus.sorted.mapq_gt_3.normalized.bw
 #    --output_folder=SNAPTEST
+#    --genome=mm10
 ##########################################################################################################
 
 # Imports
@@ -26,7 +26,7 @@ def check_args(all_args):
     """
     :param all_args: # (this is a list of all provided command-line arguements)
     :return: arg_dict # if 6 or 11arguments are not provided an Exception is raised
-    TLDR: This function checks the provided command-line arguments to see if they are valid,
+    TLDR: This function checks the provided command-line arguments and them uses regex to check to see if they are valid,
     if they are not an Exception is raised!
     """
     def parse_args(args):  # maybe look into using a decorator here, the more python-ic way
@@ -49,8 +49,9 @@ def check_args(all_args):
             --narrowPeak_file
             --treatmentBW_file
             --inputBW_file
-            --output_folder\n* Invalid Input Arguments provided *
-            \nUsage:\npython igvSnapshots.py --n=5 --narrowPeak_file=narrow.narrowPeak --treatmentBW_file=treatment.bw --inputBW_file=inputfile.bw --output_folder=FolderName
+            --output_folder
+            --genome\n* Invalid Input Arguments provided *
+            \nUsage:\npython igvSnapshots.py --n=5 --narrowPeak_file=narrow.narrowPeak --treatmentBW_file=treatment.bw --inputBW_file=inputfile.bw --output_folder=FolderName --genome=mm10
             """
 
     if len(all_args) != 7 and len(all_args) != 13:  # maybe use an assert statement here
@@ -77,7 +78,7 @@ def benchmarker(any_function):
         t1 = time.time()
         any_function(*args, **kwargs)
         t2 = time.time()
-        return "Time it took to run {} function:{}\n".format(some_function.__name__, str(t2 - t1))
+        return "Time it took to run {} function:{}\n".format(any_function.__name__, str(t2 - t1))
     return timing_wrapper
 
 
@@ -178,7 +179,7 @@ class ChipSeqPipeline(object):
             p1.stdout.close()  # Allow p1 to receive a SIGPIPE if p2 exits.
             output = p2.communicate()[0]
 
-            #fh = open("CHIP_Thpok_Biotin_vs_Input_Thpok_peaks_SORTEDqValue_TOP50.narrowPeak", "w")
+            
             fh = open(self.sortedNnarrowpeaks, "w")
             fh.write(output)
             fh.close()
@@ -193,12 +194,12 @@ class ChipSeqPipeline(object):
         :return: Output folder with IGv N-peaks results
         """
         self.validate()
-        self.__run("mkdir {}".format(self.output_folder).split(), "no")
-        self.__run("sort -k9nr,9 CHIP_Thpok_Biotin_vs_Input_Thpok_peaks.narrowPeak".split(), "yes")
+        self.__run("mkdir --p {}".format(self.output_folder).split(), "no")
+        self.__run("sort -k9nr,9 {}".format(self.narrow_peaks).split(), "yes")
         self.__run("echo module load igv".split(), "no")
         self.createIGVscript(self.input_bw, self.treatment_bw, self.sortedNnarrowpeaks, genome=self.genome,
                              maxPanelheight=500, padding=500, snapdirectory=self.output_folder)
-	self.__run("igv -m 40g -b igv_batch_script.txt".split(), "no")
+        self.__run("igv -m 40g -b igv_batch_script.txt".split(), "no")
         #self.__run("echo Clean up the directory as needed-- rm any un-needed files!".split())
 
     def __str__(self):

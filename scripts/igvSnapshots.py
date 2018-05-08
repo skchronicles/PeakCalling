@@ -26,7 +26,7 @@ def check_args(all_args):
     """
     :param all_args: # (this is a list of all provided command-line arguements)
     :return: arg_dict # if 6 or 11arguments are not provided an Exception is raised
-    TLDR: This function checks the provided command-line arguments and them uses regex to check to see if they are valid,
+    TLDR: This function checks the provided command-line arguments to see if they are valid,
     if they are not an Exception is raised!
     """
     def parse_args(args):  # maybe look into using a decorator here, the more python-ic way
